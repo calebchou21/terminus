@@ -1,0 +1,10 @@
+[package]
+name = "CLI_crawler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+textwrap = { version = "0.16.1", features = ["terminal_size"] }
+dialoguer = "0.11.0"
+crossterm = "0.28.1"
+colored = "2.1.0"
