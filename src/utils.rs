@@ -1,26 +1,30 @@
-use std::{fmt::Display, io::{self, Write}, thread};
+use std::{fmt::Display, io::{self, Write}, thread, time};
 use crossterm::event::{self, Event};
 use dialoguer::Select;
 use textwrap;
 
 pub struct SelectionPrompt<'a, T> {
-    prompt: &'a str,
+    prompt: Option<&'a str>,
     options: Vec<T>
 }
 
 impl<'a, T: Display + Clone> SelectionPrompt<'a, T> {
-
-    pub fn new(prompt: &'a str, options: Vec<T> ) -> Self {
+    pub fn new(prompt: Option<&'a str>, options: Vec<T> ) -> Self {
         SelectionPrompt { prompt, options}
     }
     
     pub fn select_option(&self) -> String {
-        let selection = Select::new()
-            .with_prompt(self.prompt)
+        let mut select = Select::new()
             .default(0)
             .max_length(5)
             .items(&self.options)
-            .interact();
+            .report(false);
+
+        if let Some(prompt) = self.prompt {
+            select = select.with_prompt(prompt);
+        }
+
+        let selection = select.interact();
 
         match selection {
             Ok(index) => self.options[index].clone().to_string(),
@@ -47,6 +51,10 @@ pub fn type_effect(text_to_type: &str, delay: u64) {
     }
 
     clear_input_buffer();
+}
+
+pub fn delay(delay: u64) {
+    thread::sleep(time::Duration::from_millis(delay));
 }
 
 fn clear_input_buffer() {

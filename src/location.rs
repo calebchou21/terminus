@@ -25,7 +25,7 @@ impl Location {
     pub fn travel_to(&self) -> Option<String> {
         if let Some(children) = &self.children {
             let options: Vec<String> = children.iter().map(|child| child.name.clone()).collect();
-            let travel_prompt = utils::SelectionPrompt::new("Where would you like to travel to?", options);
+            let travel_prompt = utils::SelectionPrompt::new(Some("Where would you like to travel to?"), options);
             Some(travel_prompt.select_option())
         } else {
             println!("There are no places to travel to from here.");
